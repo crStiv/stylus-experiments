@@ -23,6 +23,7 @@
         devShells.default = with pkgs; mkShell {
           buildInputs = [
             openssl
+            pkg-config
             stableToolchain
           ] ++ lib.optionals stdenv.isDarwin
             [ darwin.apple_sdk.frameworks.SystemConfiguration ];
