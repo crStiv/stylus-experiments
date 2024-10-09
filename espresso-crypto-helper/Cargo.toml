@@ -66,12 +66,6 @@ jf-pcs = { path = "../../jellyfish/pcs" }
 jf-relation = { path = "../../jellyfish/relation" }
 jf-rescue ={ path = "../../jellyfish/rescue"}
 
-
-[dev-dependencies]
-# tokio = { version = "1.12.0", features = ["full"] }
-# ethers = "2.0"
-# eyre = "0.6.8"
-
 [features]
 export-abi = ["stylus-sdk/export-abi"]
 debug = ["stylus-sdk/debug"]

@@ -25,6 +25,9 @@
             openssl
             pkg-config
             stableToolchain
+
+            rust-cbindgen
+            wabt
           ] ++ lib.optionals stdenv.isDarwin
             [ darwin.apple_sdk.frameworks.SystemConfiguration ];
 
