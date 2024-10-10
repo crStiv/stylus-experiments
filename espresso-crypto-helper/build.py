@@ -71,7 +71,6 @@ def find_functions_in_wat(wat_file):
                 inside_function = False
                 function_definition = ""
 
-    print(functions[-1])
     return functions
 
 def insert_functions_into_wat(wat_file, functions_to_insert):

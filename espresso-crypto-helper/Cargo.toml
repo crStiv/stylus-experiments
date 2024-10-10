@@ -28,26 +28,25 @@ paste = "1.0"
 serde_json = "1.0"
 committable = {version = "0.2", features = ["ark-serialize"]}
 ethereum-types = "0.14.1"
-tagged-base64 = {version = "0.4", default-features = false, features = ["serde", "ark-serialize"], git = "https://github.com/EspressoSystems/tagged-base64"}
+tagged-base64 = {version = "0.4", default-features = false, features = ["serde", "ark-serialize"]}
 lazy_static = "1.4"
 serde = { version = "1.0.195", features = ["derive"] }
 itertools = "0.12"
 either =  {version = "1.11.0", features = ["serde"]}
 getrandom = { version = "0.2.12", features = [ "custom" ] }
 
-jf-crhf = { version = "0.1.0", git = "https://github.com/EspressoSystems/jellyfish", tag = "0.4.5" }
-jf-utils = { git = "https://github.com/EspressoSystems/jellyfish", tag = "0.4.5", features = [], default-features = false}
-# jf-vid = { version = "0.1.0", git = "https://github.com/EspressoSystems/jellyfish", tag = "0.4.5", features = [
-#   "std",
-# ], default-features = false}
-jf-vid = {version = "*", path = "../../jellyfish/vid", features = ["std"], default-features = false}
-jf-merkle-tree = { version = "0.1.0", git = "https://github.com/EspressoSystems/jellyfish", tag = "0.4.5", features = [
+jf-crhf = { version = "0.1.0", git = "https://github.com/EspressoSystems/jellyfish", branch = "jh/stylus-experiment" }
+jf-utils = { git = "https://github.com/EspressoSystems/jellyfish", branch = "jh/stylus-experiment", features = [], default-features = false}
+jf-vid = { version = "0.1.0", git = "https://github.com/EspressoSystems/jellyfish", branch = "jh/stylus-experiment", features = [
   "std",
 ], default-features = false}
-jf-pcs = { version = "0.1.0", git = "https://github.com/EspressoSystems/jellyfish", tag = "0.4.5", features = [
+jf-merkle-tree = { version = "0.1.0", git = "https://github.com/EspressoSystems/jellyfish", branch = "jh/stylus-experiment", features = [
+  "std",
+], default-features = false}
+jf-pcs = { version = "0.1.0", git = "https://github.com/EspressoSystems/jellyfish", branch = "jh/stylus-experiment", features = [
   "std",
 ], default-features = false }
-jf-rescue = { version = "0.1.0", git = "https://github.com/EspressoSystems/jellyfish", tag = "0.4.5", features = [
+jf-rescue = { version = "0.1.0", git = "https://github.com/EspressoSystems/jellyfish", branch = "jh/stylus-experiment", features = [
   "std",
 ], default-features = false}
 trait-set = "0.3.0"
@@ -56,15 +55,6 @@ typenum = { version = "1.15.0", default-features = false, features = [
 ] }
 num-traits = "0.2.17"
 derivative = "2.2"
-
-[patch.'https://github.com/EspressoSystems/jellyfish']
-jf-crhf = { path = "../../jellyfish/crhf" }
-jf-utils = { path = "../../jellyfish/utilities" }
-# jf-vid = {version = "0.2.0", path = "../../jellyfish/vid"}
-jf-merkle-tree = { path = "../../jellyfish/merkle_tree" }
-jf-pcs = { path = "../../jellyfish/pcs" }
-jf-relation = { path = "../../jellyfish/relation" }
-jf-rescue ={ path = "../../jellyfish/rescue"}
 
 [features]
 export-abi = ["stylus-sdk/export-abi"]
