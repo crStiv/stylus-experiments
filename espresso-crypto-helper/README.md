@@ -61,3 +61,11 @@ cargo stylus check --wasm-file ./tmp/espresso-crypto-helper.wasm -e http://local
 ```cmd
 cargo stylus deploy --verbose --wasm-file target/wasm32-unknown-unknown/release/stylus_hello_world.wasm --endpoint http://localhost:8547 --private-key 0xdc04c5399f82306ec4b4d654a342f40e2e0620fe39950d967e1e574b32d4dd36
 ```
+
+### Generate the abi
+
+Check if the ABI can be generated correctly
+
+```cmd
+cargo stylus export-abi
+```
