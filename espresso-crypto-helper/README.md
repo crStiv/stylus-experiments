@@ -69,3 +69,7 @@ Check if the ABI can be generated correctly
 ```cmd
 cargo stylus export-abi
 ```
+
+### Call the contract
+
+`test_data.json` has the data that we can build a calldata to call the contract. These data are from [a test in espresso-sequencer](https://github.com/EspressoSystems/espresso-sequencer/blob/f0ec645cb27e224f98bf490147cefeca7bd62882/types/src/v0/impls/block/full_payload/ns_proof/test.rs#L79).
