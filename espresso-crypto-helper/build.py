@@ -28,7 +28,7 @@ def main(contract_wasm, soft_float_wasm, output):
     wrap_functions = get_wrap_functions()
     insert_functions_into_wat(contract_wat, wrap_functions)
 
-    insert_global_after_memory(contract_wat)
+    insert_global_after_last_global(contract_wat)
 
     replace_f64_operations_with_calls(contract_wat)
 
@@ -114,14 +114,18 @@ def replace_f64_operations_with_calls(wat_file):
     with open(wat_file, 'w') as file:
         file.writelines(updated_content)
 
-def insert_global_after_memory(wat_file):
+def insert_global_after_last_global(wat_file):
     with open(wat_file, 'r') as file:
         content = file.readlines()
 
-    insert_index = next((i for i, line in enumerate(content) if "(memory" in line), None)
+    last_global_index = next((i for i in reversed(range(len(content))) if content[i].strip().startswith("(global")), None)
 
-    if insert_index is not None:
-        content.insert(insert_index + 1, "(global $__stack_pointer (mut i32) (i32.const 66832))\n")
+    if last_global_index is not None:
+        # 2-pages memory by default. 2 * 65536 - 4
+        content.insert(last_global_index + 1, "(global $__stack_pointer (mut i32) (i32.const 131068))\n")
+
+    else:
+        content.append("(global $__stack_pointer (mut i32) (i32.const 66832))\n")
 
     with open(wat_file, 'w') as file:
         file.writelines(content)
