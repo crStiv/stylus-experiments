@@ -123,9 +123,8 @@ def insert_global_after_last_global(wat_file):
     if last_global_index is not None:
         # 2-pages memory by default. 2 * 65536 - 4
         content.insert(last_global_index + 1, "(global $__stack_pointer (mut i32) (i32.const 131068))\n")
-
     else:
-        content.append("(global $__stack_pointer (mut i32) (i32.const 66832))\n")
+        raise ""
 
     with open(wat_file, 'w') as file:
         file.writelines(content)
