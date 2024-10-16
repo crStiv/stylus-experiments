@@ -174,8 +174,7 @@ pub fn verify_namespace_helper(
         bytes: ns_table_bytes.to_vec(),
     };
     let tagged = TaggedBase64::parse(&commit_str).unwrap();
-    // let commit: VidCommitment = tagged.try_into().unwrap();
-    let commit: VidCommitment = VidCommitment::default();
+    let commit: VidCommitment = tagged.try_into().unwrap();
     let vid_common: VidCommon = serde_json::from_slice(common_data_bytes).unwrap();
 
     let (txns, ns) = proof.verify(&ns_table, &commit, &vid_common).unwrap();
