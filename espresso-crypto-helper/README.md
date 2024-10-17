@@ -36,7 +36,9 @@ We have to hack our WASM to get around this.
 
 ### Prepare the soft-float WASM
 
-In your `nitro-espresso-integration` repo:
+The `soft-float` WASM is under the current directory.
+
+You can also build it in your `nitro-espresso-integration` repo with this command :
 
 ```cmd
 make build-wasm-libs
@@ -52,10 +54,8 @@ mkdir tmp
 
 ### Run the python script
 
-Replace the `{YOUR_INTEGRATION_REPO_PATH}` with your path.
-
 ```cmd
-python3 ./build.py ./target/wasm32-unknown-unknown/release/espresso_crypto_helper.wasm {YOUR_INTEGRATION_REPO_PATH}/target/machines/latest/soft-float.wasm ./tmp
+python3 ./build.py ./target/wasm32-unknown-unknown/release/espresso_crypto_helper.wasm ./soft-float.wasm ./tmp
 ```
 
 After this command, you will have these stuff in your directory:
