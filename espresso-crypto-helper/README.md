@@ -14,9 +14,9 @@ cargo build --release --target wasm32-unknown-unknown
 
 ## Run the test node
 
-Currently we need to run a testnode to get around the size limitations.
+Currently we need to run our dev node to get around the size limitations.
 
-Use a new terminal and in your `nitro-espresso-integration` repo:
+Open a new terminal and run these commands in your `nitro-espresso-integration` repo and checkout to `jh/stylus-experiment` branch:
 
 ```cmd
 git pull
@@ -27,6 +27,22 @@ cd nitro-testnode
 ```
 
 ## Concat the contract WASM with soft-float implementation
+
+`f64` instructions couldn't be converted into WAVM easily because solidity has no `f64` type. Unfornately our contract WASM somehow has some f64 instructions, which hinders it being deployed.
+
+`Nitro` has similar issues and they use the `soft-float` implementation and the cross-module call amoung the WASMs to turn the `replay binary WASM` to `WAVM`.
+But `Nitro` doesn't support the `f64` conversions in the stylus contract executing environment.
+We have to hack our WASM to get around this.
+
+### Prepare the soft-float WASM
+
+In your `nitro-espresso-integration` repo:
+
+```cmd
+make build-wasm-libs
+```
+
+Then the `soft-float.wasm` can be found in `./target/machines/latest/soft-float.wasm`.
 
 ### Create an output directory
 
@@ -48,6 +64,7 @@ After this command, you will have these stuff in your directory:
 - espresso_crypto_helper.wat
 - soft-float.wat
 
+This script converts those 2 WASM into the WAT format, and appends the `soft-float` implementation to our contract file. And then it turns the contract WAT file into WASM again.
 What we only need is the WASM file.
 
 ### Run the stylus check
@@ -56,13 +73,13 @@ What we only need is the WASM file.
 cargo stylus check --wasm-file ./tmp/espresso-crypto-helper.wasm -e http://localhost:8547
 ```
 
-### Deploy the contract
+## Deploy the contract
 
 ```cmd
-cargo stylus deploy --verbose --wasm-file target/wasm32-unknown-unknown/release/stylus_hello_world.wasm --endpoint http://localhost:8547 --private-key 0xdc04c5399f82306ec4b4d654a342f40e2e0620fe39950d967e1e574b32d4dd36
+cargo stylus deploy --wasm-file ./tmp/espresso_crypto_helper.wasm --private-key 0xdc04c5399f82306ec4b4d654a342f40e2e0620fe39950d967e1e574b32d4dd36 --endpoint http://localhost:8547 --no-verify
 ```
 
-### Generate the abi
+## Generate the abi
 
 Check if the ABI can be generated correctly
 
@@ -70,15 +87,17 @@ Check if the ABI can be generated correctly
 cargo stylus export-abi
 ```
 
-### Call the contract
-
-`test_data.json` has the data that we can build a calldata to call the contract. These data are from [a test in espresso-sequencer](https://github.com/EspressoSystems/espresso-sequencer/blob/f0ec645cb27e224f98bf490147cefeca7bd62882/types/src/v0/impls/block/full_payload/ns_proof/test.rs#L79) with the `num_of_storage_nodes` in the vid scheme set to 4.
+## Call the contract
 
 ```cmd
 python3 call_contract.py
 ```
 
-Then you can see the receipt like this:
+This script is using the `test_data.json` as the input to call the contract.
+
+`test_data.json` has the data that we can build a calldata to call the contract. These data are from [a test in espresso-sequencer](https://github.com/EspressoSystems/espresso-sequencer/blob/f0ec645cb27e224f98bf490147cefeca7bd62882/types/src/v0/impls/block/full_payload/ns_proof/test.rs#L79) with the `num_of_storage_nodes` in the vid scheme set to 4.
+
+Then you should see the output like this:
 
 ```output
 0x0000000000000000000000000000000000000000000000000000000000000001
