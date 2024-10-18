@@ -22,6 +22,7 @@ Open a new terminal and run these commands in your `nitro-espresso-integration` 
 git pull
 git checkout jh/stylus-experiment
 git submodule update --remote nitro-testnode
+git submodule update --remote go-ethereum
 cd nitro-testnode
 ./test-node.bash --init-force --dev
 ```
@@ -70,7 +71,7 @@ What we only need is the WASM file.
 ### Run the stylus check
 
 ```cmd
-cargo stylus check --wasm-file ./tmp/espresso-crypto-helper.wasm -e http://localhost:8547
+cargo stylus check --wasm-file ./tmp/espresso_crypto_helper.wasm -e http://localhost:8547
 ```
 
 ## Deploy the contract

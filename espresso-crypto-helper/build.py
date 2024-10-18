@@ -92,12 +92,16 @@ def replace_f64_operations_with_calls(wat_file):
     f64_operations = {
         "f64.convert_i64_u": "$user__f64_convert_i64_u",
         "f64.eq": "$user__f64_eq",
+        "f64.gt": "$user__f64_gt",
+        "f64.ge": "$user__f64_ge",
         "f64.div": "$user__f64_div",
         "f64.mul": "$user__f64_mul",
         "f64.abs": "$user__f64_abs",
         "f64.ne": "$user__f64_ne",
         "f64.neg": "$user__f64_neg",
         "f64.lt": "$user__f64_lt",
+        "i64.trunc_f64_u": "$user__i64_trunc_f64_u",
+        "f64.promote_f32": "$user__f64_promote_f32",
     }
 
     with open(wat_file, 'r') as file:
@@ -234,7 +238,56 @@ def get_wrap_functions():
             call $wavm__f64_lt
             return
         )
+        """,
         """
+        (func $user__f64_ge (param f64 f64) (result i32)
+            (local i64 i64)
+            local.get 0
+            i64.reinterpret_f64
+            local.set 2
+            local.get 1
+            i64.reinterpret_f64
+            local.set 3
+            local.get 2
+            local.get 3
+            call $wavm__f64_ge
+            return
+        )
+        """,
+        """
+        (func $user__f64_gt (param f64 f64) (result i32)
+            (local i64 i64)
+            local.get 0
+            i64.reinterpret_f64
+            local.set 2
+            local.get 1
+            i64.reinterpret_f64
+            local.set 3
+            local.get 2
+            local.get 3
+            call $wavm__f64_gt
+            return
+        )
+        """,
+        """
+        (func $user__i64_trunc_f64_u (param f64) (result i64)
+            (local i64)
+            local.get 0
+            i64.reinterpret_f64
+            call $wavm__i64_trunc_f64_u
+            return
+        )
+        """,
+        """
+        (func $user__f64_promote_f32 (param f32) (result f64)
+            (local i32)
+            local.get 0
+            i32.reinterpret_f32
+            call $wavm__f64_promote_f32
+            f64.reinterpret_i64
+            return
+        )
+        """,
     ]
     return wat_functions
 

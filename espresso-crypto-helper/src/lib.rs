@@ -26,7 +26,6 @@ use jf_rescue::{crhf::VariableLengthRescueCRHF, RescueError};
 use sequencer_data_structures::{
     field_to_u256, BlockMerkleCommitment, BlockMerkleTree, Header, Transaction,
 };
-use serde::Serialize;
 use sha2::{Digest, Sha256};
 use tagged_base64::TaggedBase64;
 
@@ -64,19 +63,19 @@ impl Entry {
         );
     }
 
-    // pub fn verify_merkle_proof(
-    //     proof_bytes: Vec<u8>,
-    //     header_bytes: Vec<u8>,
-    //     block_comm_bytes: Vec<u8>,
-    //     circuit_block_bytes: Vec<u8>,
-    // ) -> bool {
-    //     return verify_merkle_proof_helper(
-    //         &proof_bytes,
-    //         &header_bytes,
-    //         &block_comm_bytes,
-    //         &circuit_block_bytes,
-    //     );
-    // }
+    pub fn verify_merkle_proof(
+        proof_bytes: Vec<u8>,
+        header_bytes: Vec<u8>,
+        block_comm_bytes: Vec<u8>,
+        circuit_block_bytes: Vec<u8>,
+    ) -> bool {
+        return verify_merkle_proof_helper(
+            &proof_bytes,
+            &header_bytes,
+            &block_comm_bytes,
+            &circuit_block_bytes,
+        );
+    }
 }
 
 #[derive(
@@ -116,38 +115,38 @@ pub type CircuitField = ark_ed_on_bn254::Fq;
 // root_bytes: Byte representation of a Sha3Node merkle root.
 // header_bytes: Byte representation of the HotShot header being validated as a Merkle leaf.
 // circuit_block_bytes: Circuit representation of the HotShot header commitment returned by the light client contract.
-// pub fn verify_merkle_proof_helper(
-//     proof_bytes: &[u8],
-//     header_bytes: &[u8],
-//     block_comm_bytes: &[u8],
-//     circuit_block_bytes: &[u8],
-// ) -> bool {
-//     let proof_str = std::str::from_utf8(proof_bytes).unwrap();
-//     let header_str = std::str::from_utf8(header_bytes).unwrap();
-//     let block_comm_str = std::str::from_utf8(block_comm_bytes).unwrap();
-//     let tagged = TaggedBase64::parse(&block_comm_str).unwrap();
-//     let block_comm: BlockMerkleCommitment = tagged.try_into().unwrap();
+pub fn verify_merkle_proof_helper(
+    proof_bytes: &[u8],
+    header_bytes: &[u8],
+    block_comm_bytes: &[u8],
+    circuit_block_bytes: &[u8],
+) -> bool {
+    let proof_str = std::str::from_utf8(proof_bytes).unwrap();
+    let header_str = std::str::from_utf8(header_bytes).unwrap();
+    let block_comm_str = std::str::from_utf8(block_comm_bytes).unwrap();
+    let tagged = TaggedBase64::parse(&block_comm_str).unwrap();
+    let block_comm: BlockMerkleCommitment = tagged.try_into().unwrap();
 
-//     let proof: Proof = serde_json::from_str(proof_str).unwrap();
-//     let header: Header = serde_json::from_str(header_str).unwrap();
-//     let header_comm: Commitment<Header> = header.commit();
+    let proof: Proof = serde_json::from_str(proof_str).unwrap();
+    let header: Header = serde_json::from_str(header_str).unwrap();
+    let header_comm: Commitment<Header> = header.commit();
 
-//     let proof = MerkleProof::new(header.height, proof.to_vec());
-//     let proved_comm = proof.elem().unwrap().clone();
-//     BlockMerkleTree::verify(block_comm.digest(), header.height, proof)
-//         .unwrap()
-//         .unwrap();
+    let proof = MerkleProof::new(header.height, proof.to_vec());
+    let proved_comm = proof.elem().unwrap().clone();
+    BlockMerkleTree::verify(block_comm.digest(), header.height, proof)
+        .unwrap()
+        .unwrap();
 
-//     let mut block_comm_root_bytes = vec![];
-//     block_comm
-//         .serialize_compressed(&mut block_comm_root_bytes)
-//         .unwrap();
-//     let field_bytes = hash_bytes_to_field(&block_comm_root_bytes).unwrap();
-//     let local_block_comm_u256 = field_to_u256(field_bytes);
-//     let circuit_block_comm_u256 = U256::from_little_endian(circuit_block_bytes);
+    let mut block_comm_root_bytes = vec![];
+    block_comm
+        .serialize_compressed(&mut block_comm_root_bytes)
+        .unwrap();
+    let field_bytes = hash_bytes_to_field(&block_comm_root_bytes).unwrap();
+    let local_block_comm_u256 = field_to_u256(field_bytes);
+    let circuit_block_comm_u256 = U256::from_little_endian(circuit_block_bytes);
 
-//     return proved_comm == header_comm && local_block_comm_u256 == circuit_block_comm_u256;
-// }
+    return proved_comm == header_comm && local_block_comm_u256 == circuit_block_comm_u256;
+}
 
 // Helper function to verify a VID namespace proof that takes the byte representations of the proof,
 // namespace table, and commitment string.
@@ -196,12 +195,12 @@ fn hash_txns(namespace: u32, txns: &[Transaction]) -> String {
     format!("{:x}", hash_result)
 }
 
-// fn hash_bytes_to_field(bytes: &[u8]) -> Result<CircuitField, RescueError> {
-//     // make sure that `mod_order` won't happen.
-//     let bytes_len = ((<CircuitField as PrimeField>::MODULUS_BIT_SIZE + 7) / 8 - 1) as usize;
-//     let elem = bytes
-//         .chunks(bytes_len)
-//         .map(CircuitField::from_le_bytes_mod_order)
-//         .collect::<Vec<_>>();
-//     Ok(VariableLengthRescueCRHF::<_, 1>::evaluate(elem)?[0])
-// }
+fn hash_bytes_to_field(bytes: &[u8]) -> Result<CircuitField, RescueError> {
+    // make sure that `mod_order` won't happen.
+    let bytes_len = ((<CircuitField as PrimeField>::MODULUS_BIT_SIZE + 7) / 8 - 1) as usize;
+    let elem = bytes
+        .chunks(bytes_len)
+        .map(CircuitField::from_le_bytes_mod_order)
+        .collect::<Vec<_>>();
+    Ok(VariableLengthRescueCRHF::<_, 1>::evaluate(elem)?[0])
+}
