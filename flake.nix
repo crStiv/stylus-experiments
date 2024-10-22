@@ -25,6 +25,9 @@
             openssl
             pkg-config
             stableToolchain
+            bashInteractive
+            coreutils
+            python3
 
             rust-cbindgen
             wabt
