@@ -1,7 +1,7 @@
 import json
 import subprocess
 
-with open('test_data.json', 'r') as f:
+with open('namespace_proof_test_data.json', 'r') as f:
     data = json.load(f)
 
 namespace = data["namespace"]
@@ -14,7 +14,7 @@ common_data_bytes = data["vid_common"]
 contract_address = "0x4e5b65fb12d4165e22f5861d97a33ba45c006114"
 private_key = "0xdc04c5399f82306ec4b4d654a342f40e2e0620fe39950d967e1e574b32d4dd36"
 
-send_command = [
+call_namespace_proof_command = [
     "cast", "call", contract_address,
     "verifyNamespace(uint64,uint8[],uint8[],uint8[],uint8[],uint8[])",
     str(namespace),
@@ -27,4 +27,4 @@ send_command = [
     "--rpc-url", "http://localhost:8547",
 ]
 
-subprocess.run(send_command)
+subprocess.run(call_namespace_proof_command)
