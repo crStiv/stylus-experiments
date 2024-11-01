@@ -28,7 +28,7 @@ def main(contract_wasm, soft_float_wasm, output):
     wrap_functions = get_wrap_functions()
     insert_functions_into_wat(contract_wat, wrap_functions)
 
-    insert_global_after_last_global(contract_wat)
+    # insert_global_after_last_global(contract_wat)
 
     replace_f64_operations_with_calls(contract_wat)
 
